@@ -22,4 +22,4 @@ COPY . /app/
 
 # Comando para ejecutar la aplicación (ajústalo según la configuración de tu aplicación)
 #CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-ENTRYPOINT [ "gunicorn", "core.wsgi"]
+ENTRYPOINT [ "gunicorn", "backAPI.wsgi"]
