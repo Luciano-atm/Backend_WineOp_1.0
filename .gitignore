@@ -1,0 +1,5 @@
+.env
+venv
+*.xls
+./backAPI/__pycache__
+./dssProject/__pycache__

@@ -1,0 +1,30 @@
+**Backend**
+- pip install virtualenv
+- python -m venv venv
+- .\venv\Scripts\activate
+- pip install django 
+- pip install djangorestframework
+- python manage.py runserver
+- pip install django-cors-headers
+- Acá instalar las dependencias necesarias
+- modificar las accesos de la base de datos /backAPI/settings.py (admin y puertos)
+- crear base de datos en pg (DSS_DB)
+- python manage.py makemigrations dssProject
+- python manage.py migrate dssProject
+- poblar la tabla de maquinas txt () 
+    *Luego de la instalación de PostgreSQL se debe migrar la tabla de maquinarias, esto se debe
+	realizar con el archivo .txt almacenado en el directorio \Capstone\Datos Vendimia
+	Lontué\Programas de Vendimia. Para poder importar esta tabla se debe realizar click
+	derecho en la tabla “dssProject_maquina” y seleccionar la opción de “Import/Export”,
+	luego se debe seleccionar el archivo a importar, el tipo que en este caso sería “TEXT” y
+	finalmente el tipo de codificación, que para este caso se utilizará “LATIN9”, **cambiar el espacio de las variable con [tab].
+- python manage.py runserver
+
+
+SciencePlots 
+seaborn-whitegrid
+pip install --upgrade seaborn
+
+test1.py 
+agregere import seaborn as sns
+602 sns.set_style('whitegrid')
