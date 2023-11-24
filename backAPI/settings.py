@@ -37,7 +37,7 @@ ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_WHITELIST = [
     "https://google.com",
     "http://localhost:3000",
-    "https://capstone-front-render.onrender.com"
+    "https://fronted-wineop-1-0.onrender.com"
     
 ]
 
