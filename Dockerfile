@@ -1,5 +1,5 @@
 # Usa la imagen oficial de Python con la versión que necesitas
-FROM python:3.10.0
+FROM python:3.11.4-slim-bullseye
 
 # Configura el entorno
 ENV PYTHONUNBUFFERED 1
