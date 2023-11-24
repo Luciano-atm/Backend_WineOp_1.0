@@ -3,6 +3,7 @@ FROM python:3.10.0
 
 # Configura el entorno
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 ENV LANG C.UTF-8
 
 # Instala las dependencias de Django y otras bibliotecas de Python
@@ -20,4 +21,5 @@ WORKDIR /app
 COPY . /app/
 
 # Comando para ejecutar la aplicación (ajústalo según la configuración de tu aplicación)
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT [ "gunicorn", "core.wsgi"]
