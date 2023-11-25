@@ -39,6 +39,7 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
     "https://fronted-wineop-1-0.onrender.com"
     
+    
 ]
 
 
