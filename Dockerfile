@@ -13,6 +13,7 @@ RUN pip install -r /app/requirements.txt
 
 # Instala OpenJDK 8
 RUN apt-get update && apt-get install -y openjdk-11-jdk
+RUN chmod +x /dssProject/Pyomo/CBC/bin/cbc
 
 # Define el directorio de trabajo
 WORKDIR /app

@@ -4,6 +4,7 @@ from time import time
 import os
 import numpy as np
 from dssProject.Pyomo.CBC.bin import *
+from pyomo.environ import SolverFactory
 
 def modelo():
     def search_rute(file_path):
