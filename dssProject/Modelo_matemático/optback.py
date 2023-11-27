@@ -266,7 +266,7 @@ def modelo():
         return model, TASKS, UNITS, I
 
     def solve_maravelias_model(model):
-        solver = SolverFactory('cbc',executable='./dssProject/Pyomo/CBC/bin/cbc')
+        solver = SolverFactory('cbc')
         solver.options['sec'] = 60 * 30  # Time limit in seconds
         solver.options['ratioGap'] = 5  # Maximum gap of 5%
         solver.options['findInitial'] = True

@@ -122,7 +122,7 @@ def setAgregarMaquina(request):
 
 @csrf_exempt
 def iniciarPlanificacion(request):
-    algo= modelo()
+    respuesta= modelo()
     return HttpResponse("Respuesta exitosa")
 
 
