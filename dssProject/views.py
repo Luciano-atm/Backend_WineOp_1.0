@@ -29,40 +29,6 @@ from dssProject.serializers import MaquinaSerializers, MantencionSerializer, Sch
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Create your views here.
-@csrf_exempt
-def maquinaApi(request,id=0):
-    if request.method == 'GET':
-        maquinas = Maquina.objects.all()
-        maquinas_serializer = MaquinaSerializers(maquinas,many=True)
-        return JsonResponse(maquinas_serializer.data,safe=False)
-
-@csrf_exempt
-def getMaquinasId(request):
-    if request.method == 'GET':
-        maquinas = list(Maquina.objects.values('id_maquina'))
-        return JsonResponse({"ID Maquinas":maquinas})
-
-@csrf_exempt
-def getMantenciones(request):
-    if request.method == 'GET':
-        mantenciones = Mantencion.objects.all()
-        mantenciones_serializer = MantencionSerializer(mantenciones,many=True)
-        return JsonResponse(mantenciones_serializer.data,safe=False)
-
-@csrf_exempt
-def createMantencion(request):
-    if request.method == 'POST':
-        mantencion_data = JSONParser().parse(request)
-        mantencion_serializer = MantencionSerializer(data = mantencion_data)
-        if mantencion_serializer.is_valid():
-            mantencion_serializer.save()
-            return JsonResponse(mantencion_serializer.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(mantencion_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
 
 
 @csrf_exempt
@@ -80,6 +46,24 @@ def getFileInput(request):
     response = FileResponse(fs.open("Info-Día.xlsx",'rb'),content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename="Info-Día.xlsx"'
     return response
+
+
+
+@csrf_exempt
+def getFileOutputModelo(request):
+    fecha_actual=datetime.now().strftime("%d-%m-%Y")
+    fs = FileSystemStorage(os.path.join(settings.MEDIA_ROOT, 'dssProject','Modelo_matemático', 'Files', 'output'))
+    response = FileResponse(fs.open("Planificacion_"+fecha_actual+".pdf",'rb'),content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename="Planificacion_"+fecha_actual+".pdf"'
+    return response
+
+def getFileOutputResumen(request):
+    fs = FileSystemStorage(os.path.join(settings.MEDIA_ROOT,'dssProject', 'Modelo_matemático', 'Files'))
+    response = FileResponse(fs.open("Resumen.xlsx",'rb'),content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename="Resumen.xlsx"'
+    return response
+    
+
 
 @csrf_exempt
 def setAgregarMaquina(request):
@@ -172,5 +156,38 @@ def getFile(request):
     response = FileResponse(fs.open("planificacion.pdf",'rb'),content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename="planificacion.pdf"'
     return response
+
+
+# Create your views here.
+@csrf_exempt
+def maquinaApi(request,id=0):
+    if request.method == 'GET':
+        maquinas = Maquina.objects.all()
+        maquinas_serializer = MaquinaSerializers(maquinas,many=True)
+        return JsonResponse(maquinas_serializer.data,safe=False)
+
+@csrf_exempt
+def getMaquinasId(request):
+    if request.method == 'GET':
+        maquinas = list(Maquina.objects.values('id_maquina'))
+        return JsonResponse({"ID Maquinas":maquinas})
+
+@csrf_exempt
+def getMantenciones(request):
+    if request.method == 'GET':
+        mantenciones = Mantencion.objects.all()
+        mantenciones_serializer = MantencionSerializer(mantenciones,many=True)
+        return JsonResponse(mantenciones_serializer.data,safe=False)
+
+@csrf_exempt
+def createMantencion(request):
+    if request.method == 'POST':
+        mantencion_data = JSONParser().parse(request)
+        mantencion_serializer = MantencionSerializer(data = mantencion_data)
+        if mantencion_serializer.is_valid():
+            mantencion_serializer.save()
+            return JsonResponse(mantencion_serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(mantencion_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 

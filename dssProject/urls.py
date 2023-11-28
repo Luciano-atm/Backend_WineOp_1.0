@@ -20,7 +20,10 @@ urlpatterns = [
     re_path(r'^iniciarPlanificacion$',views.iniciarPlanificacion),
     re_path(r'^postFile$',views.uploadFile),
     re_path(r'^getFileInput$',views.getFileInput),
-    re_path(r'^setAgregarMaquina$',views.setAgregarMaquina)
+    re_path(r'^setAgregarMaquina$',views.setAgregarMaquina),
+    re_path(r'^getFileOutputModelo$',views.getFileOutputModelo),
+    re_path(r'^getFileOutputResumen$',views.getFileOutputResumen)
+    
 ]
 
 if settings.DEBUG:
