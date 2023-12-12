@@ -267,8 +267,8 @@ def modelo():
         return model, UNITS, I, TIME, pr, STATES
 
     def solve_maravelias_model(model):
-        solver = SolverFactory('cbc')
-        #solver = SolverFactory('cbc', executable="C:/Users/lucia/OneDrive/Escritorio/WineOP 1.0/Backend-Capstone-main/dssProject/Pyomo/CBC/bin/cbc")
+        #solver = SolverFactory('cbc')
+        solver = SolverFactory('cbc', executable="C:/Users/lucia/OneDrive/Escritorio/WineOP 1.0/Backend-Capstone-main/dssProject/Pyomo/CBC/bin/cbc")
         solver.options['sec'] = 60 * 60  # Time limit in seconds
         solver.options['ratioGap'] = 5  # Maximum gap of 5%
         solver.options['findInitial'] = True
@@ -434,7 +434,7 @@ def modelo():
         # Guardar el archivo combinado
         with open(output_file, 'wb') as output_pdf:
             pdf_merger.write(output_pdf)
-        pdf_merger.close()
+        
 
     def deletepdf():
         # Ruta de la carpeta que contiene los archivos PDF
@@ -456,6 +456,8 @@ def modelo():
                 #print(f"Archivo eliminado: {archivo_pdf}")
             except Exception as e:
                 print(f"No se pudo eliminar {archivo_pdf}: {e}")
+
+
 
     rho_convert = {'Despalillado': 1.0,
                     'Prensado': 1.0,

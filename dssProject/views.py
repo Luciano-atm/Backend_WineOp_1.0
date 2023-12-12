@@ -4,18 +4,15 @@ from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from rest_framework import status
 from django.core.files.storage import FileSystemStorage
-import os
 from pathlib import Path
-from django.http import FileResponse
-from django.conf import settings
 import pandas as pd
 import json
 import openpyxl
-from openpyxl import Workbook
-from openpyxl import load_workbook
-from django.http import HttpResponse
-
-
+from openpyxl import Workbook, load_workbook
+from django.http import HttpResponse, FileResponse
+from django.conf import settings
+import os
+from datetime import datetime
 import dssProject.Lectura.lectura
 from dssProject.Lectura.lectura import *
 import dssProject.Modelo_matemático.optback
@@ -48,6 +45,16 @@ def getFileInput(request):
     return response
 
 
+@csrf_exempt
+def getUrlPlanificacion(request):
+    fecha_actual = datetime.now().strftime("%d-%m-%Y")
+    direccion = os.path.join(settings.MEDIA_ROOT, 'dssProject', 'Modelo_matemático', 'Files', 'output', f"Planificacion_{fecha_actual}.pdf")
+    if os.path.exists(direccion):
+        with open(direccion, 'rb') as pdf_file:
+            response = FileResponse(open(direccion, 'rb'))
+            return response
+
+    return HttpResponse("Archivo no encontrado")
 
 @csrf_exempt
 def getFileOutputModelo(request):
@@ -69,26 +76,38 @@ def getFileOutputResumen(request):
 def setAgregarMaquina(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-
-        nombreMaquina = data.get('nombreMaquina')
-        tipoMaquina = data.get('tipoMaquina')
-        capacidadMaxima = data.get('capacidadMaxima')
-        capacidadMinima = data.get('capacidadMinima')
-        cantidad = data.get('cantidad')
-        velocidadProcesado = data.get('velocidadProcesado')
+        
+        tarea = data.get('tarea')
+        capacidadMaxima = int(data.get('capacidadMaxima'))
+        tiempoProcesado = int(data.get('tiempoProcesado'))
+        
 
         try:
-            filepath = './Máquinas.xlsx' 
+            filepath = os.path.join(os.path.dirname(__file__), 'Modelo_matemático', 'settings.xlsx')
             workbook = load_workbook(filepath)
             sheet = workbook.active
 
+            numeros_maquinas = []
+            maquina=""
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                if row[5] == tarea:  
+                    nombre_maquina = row[0]
+                    numero_maquina = obtener_numero_maquina(nombre_maquina)
+                    maquina=numero_maquina[1]
+                    if int(numero_maquina[0]) is not None:
+                        numeros_maquinas.append(int(numero_maquina[0]))
+
+            numero_siguiente = max(numeros_maquinas, default=0) + 1
+
+            nuevo_nombre_maquina = f"{maquina}_{str(numero_siguiente).zfill(2)}"
+            
             new_row = [
-                nombreMaquina,
-                tipoMaquina,
+                nuevo_nombre_maquina,
                 capacidadMaxima,
-                capacidadMinima,
-                cantidad,
-                velocidadProcesado
+                tiempoProcesado,
+                0,
+                "Habilitado",
+                tarea
             ]
             sheet.append(new_row)  
 
@@ -102,12 +121,68 @@ def setAgregarMaquina(request):
 
     else:
         return HttpResponse("No se recibieron datos o la solicitud no fue mediante POST")
+    
 
+@csrf_exempt  
+def obtener_numero_maquina(nombre_maquina):
+    partes_nombre = nombre_maquina.split('_')
+    if len(partes_nombre) == 2 and partes_nombre[1].isdigit():
+        return (partes_nombre[1],partes_nombre[0])
+    return None
 
 @csrf_exempt
 def iniciarPlanificacion(request):
     respuesta= modelo()
     return HttpResponse("Respuesta exitosa")
+
+@csrf_exempt
+def getListas_habilitar(request):
+    ruta_archivo = os.path.join(os.path.dirname(__file__), 'Modelo_matemático', 'settings.xlsx')
+    df = pd.read_excel(ruta_archivo)
+    filtered_habilitado = df[df['Estado'] == 'Habilitado']
+    filtered_deshabilitado = df[df['Estado'] == 'Deshabilitado']
+    sorted_habilitado = filtered_habilitado.sort_values(by=['Tarea', 'Máquina'])
+    sorted_deshabilitado = filtered_deshabilitado.sort_values(by=['Tarea', 'Máquina'])
+    lista_habilitado = sorted_habilitado[['Máquina', 'Estado','Tarea']].values.tolist()
+    lista_deshabilitado = sorted_deshabilitado[['Máquina', 'Estado','Tarea']].values.tolist()
+    data = {
+        'habilitado': lista_habilitado,
+        'deshabilitado': lista_deshabilitado
+    }
+    return JsonResponse(data)
+
+
+@csrf_exempt
+def cambiar_estado_maquina(request):
+    ruta_archivo = os.path.join(os.path.dirname(__file__), 'Modelo_matemático', 'settings.xlsx')
+    try:
+        data = json.loads(request.body)
+        maquina_elegida = data.get('maquina')
+        nuevo_estado = data.get('estado')
+        print(maquina_elegida)
+        print(nuevo_estado)
+
+        if not maquina_elegida or not nuevo_estado:
+            return JsonResponse({"error": f"Por favor, proporciona los datos de la máquina y el nuevo estado."})
+
+        df = pd.read_excel(ruta_archivo)
+
+        indice_maquina = df[df['Máquina'] == maquina_elegida].index.tolist()
+        
+        if len(indice_maquina) > 0:
+            indice = indice_maquina[0] 
+            df.at[indice, 'Estado'] = nuevo_estado
+            df.to_excel(ruta_archivo, index=False)
+            
+            return JsonResponse({"mensaje": f"Estado de la máquina {maquina_elegida} cambiado a {nuevo_estado} correctamente."})
+        else:
+            return JsonResponse({"error": f"No se encontró la máquina {maquina_elegida} en el archivo."})
+    except Exception as e:
+        return JsonResponse({"error": str(e)})
+
+
+
+
 
 
 

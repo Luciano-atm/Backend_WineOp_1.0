@@ -22,7 +22,10 @@ urlpatterns = [
     re_path(r'^getFileInput$',views.getFileInput),
     re_path(r'^setAgregarMaquina$',views.setAgregarMaquina),
     re_path(r'^getFileOutputModelo$',views.getFileOutputModelo),
-    re_path(r'^getFileOutputResumen$',views.getFileOutputResumen)
+    re_path(r'^getFileOutputResumen$',views.getFileOutputResumen),
+    re_path(r'^getUrlPlanificacion$',views.getUrlPlanificacion),
+    re_path(r'^getListas_habilitar$',views.getListas_habilitar),
+    re_path(r'^cambiar_estado_maquina$',views.cambiar_estado_maquina)
     
 ]
 
