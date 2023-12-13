@@ -34,7 +34,7 @@ def modelo():
         Bminprom = CubasDisp['Bmin'].mean()
         ReqCfer = round(ReqTon*0.96*0.84*0.94*760/Bminprom,0)
         df['Estado'] = ['Deshabilitado' if 'CubaF' in maquina and int(maquina.split('_')[1]) > ReqCfer else 'Habilitado' for maquina in df['Máquina']]
-        df=df[df['Estado'] == 'Habilitado']
+        df=df[df['Estado'] == 'Habilitado'].reset_index()
         rho_convert = {'Despalillado': 1.0,
                 'Prensado': 1.0,
                 'Pre-flotación': 1/760,
@@ -267,8 +267,8 @@ def modelo():
         return model, UNITS, I, TIME, pr, STATES
 
     def solve_maravelias_model(model):
-        solver = SolverFactory('cbc')
-        #solver = SolverFactory('cbc', executable="C:/Users/lucia/OneDrive/Escritorio/WineOP 1.0/Backend-Capstone-main/dssProject/Pyomo/CBC/bin/cbc")
+        #solver = SolverFactory('cbc')
+        solver = SolverFactory('cbc', executable="C:/Users/lucia/OneDrive/Escritorio/WineOP 1.0/Backend-Capstone-main/dssProject/Pyomo/CBC/bin/cbc")
         solver.options['sec'] = 60 * 60  # Time limit in seconds
         solver.options['ratioGap'] = 5  # Maximum gap of 5%
         solver.options['findInitial'] = True

@@ -25,10 +25,10 @@ COPY . .
 # Comando para ejecutar la aplicación (ajústalo según la configuración de tu aplicación)
 
 # Ejecutable local
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # Anterior ejecutable de render
 #ENTRYPOINT [ "gunicorn", "backAPI.wsgi"]  
 
 # Actual ejecutable para render *limita
-ENTRYPOINT ["gunicorn", "backAPI.wsgi", "--workers", "3", "--timeout", "1000", "--bind", "0.0.0.0:8000"] 
+#ENTRYPOINT ["gunicorn", "backAPI.wsgi", "--workers", "3", "--timeout", "1000", "--bind", "0.0.0.0:8000"] 
