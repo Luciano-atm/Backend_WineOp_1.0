@@ -267,8 +267,8 @@ def modelo():
         return model, UNITS, I, TIME, pr, STATES
 
     def solve_maravelias_model(model):
-        #solver = SolverFactory('cbc')
-        solver = SolverFactory('cbc', executable="C:/Users/lucia/OneDrive/Escritorio/WineOP 1.0/Backend-Capstone-main/dssProject/Pyomo/CBC/bin/cbc")
+        solver = SolverFactory('cbc')
+        #solver = SolverFactory('cbc', executable="C:/Users/lucia/OneDrive/Escritorio/WineOP 1.0/Backend-Capstone-main/dssProject/Pyomo/CBC/bin/cbc")
         solver.options['sec'] = 60 * 60  # Time limit in seconds
         solver.options['ratioGap'] = 5  # Maximum gap of 5%
         solver.options['findInitial'] = True
